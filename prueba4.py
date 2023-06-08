@@ -1,5 +1,10 @@
+import pandas as pd
 import tkinter as tk
 from tkinter import ttk
+
+# Cargar los datos del archivo Excel en un DataFrame
+ruta = r'C:\Users\USUARIO\Desktop\Material de estudio\Fundamentos de Programacion\proyecto\All_Book_Data.csv'
+df = pd.read_csv(ruta)
 
 # Crear una ventana principal
 ventana = tk.Tk()
@@ -15,39 +20,30 @@ def agregar_libro(libro):
     frame_libro.pack()
 
     # Crear y mostrar los campos de información del libro en el frame correspondiente
-    etiqueta_titulo = ttk.Label(frame_libro, text="Título: " + libro["title"])
+    etiqueta_titulo = ttk.Label(frame_libro, text="Título: " + str(libro["book_name"]))
     etiqueta_titulo.pack()
 
-    etiqueta_autor = ttk.Label(frame_libro, text="Autor: " + libro["author"])
+    etiqueta_autor = ttk.Label(frame_libro, text="Autor: " + str(libro["author_name"]))
     etiqueta_autor.pack()
 
-    etiqueta_descripcion = ttk.Label(frame_libro, text="Descripción: " + libro["description"])
+    etiqueta_descripcion = ttk.Label(frame_libro, text="Descripción: " + str(libro["description"]))
     etiqueta_descripcion.pack()
 
     etiqueta_precio = ttk.Label(frame_libro, text="Precio: $" + str(libro["price"]))
     etiqueta_precio.pack()
 
     # Agregar el frame del libro al diccionario
-    frames_libros[libro["title"]] = frame_libro
+    frames_libros[libro["book_name"]] = frame_libro
 
-# Ejemplo de libros
-libro1 = {
-    "title": "The Elements of Style",
-    "author": "William Strunk Jr.",
-    "description": "This style manual offers practical advice on improving writing skills...",
-    "price": 9.99
-}
-
-libro2 = {
-    "title": "The Information: A History, a Theory, a Flood",
-    "author": "James Gleick",
-    "description": "James Gleick, the author of the best sellers Chaos and Genius...",
-    "price": 12.99
-}
-
-# Agregar los ejemplos de libros a la interfaz
-agregar_libro(libro1)
-agregar_libro(libro2)
+# Agregar los libros del DataFrame a la interfaz
+for index, row in df.iterrows():
+    libro = {
+        "book_name": row["book_name"],
+        "author_name": row["author"],
+        "description": row["short_description"],
+        "price": row["price"]
+    }
+    agregar_libro(libro)
 
 # Función para agregar un nuevo libro a través de una ventana de diálogo
 def agregar_libro_dialogo():
@@ -56,8 +52,8 @@ def agregar_libro_dialogo():
 
     # Ejemplo:
     nuevo_libro = {
-        "title": "Nuevo Libro",
-        "author": "Autor Desconocido",
+        "book_name": "Nuevo Libro",
+        "author_name": "Autor Desconocido",
         "description": "Descripción del nuevo libro...",
         "price": 19.99
     }
