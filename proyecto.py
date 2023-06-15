@@ -2,9 +2,10 @@ from tkinter import *
 import tkinter as tk
 import database
 import random
-from tkinter import messagebox, ttk
+from tkinter import messagebox, simpledialog
 from PIL import Image, ImageTk
 from tkinter import Toplevel
+import pickle
 
 # funciones
 def buscar_libro():
@@ -128,7 +129,7 @@ def abrir_busqueda_personalizada():
     frame_titulo_principal.config(bg="aquamarine2", width=375, height=60)
     frame_titulo_principal.place(x=10, y=10)
 
-    lb_titulo = Label(frame_titulo_principal, text="F u n d a m e n t a l s   o f    C o d e")
+    lb_titulo = Label(frame_titulo_principal, text="C O D E  R E A D S")
     lb_titulo.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
     lb_titulo.place(relx=0.5, rely=0.5, anchor=CENTER)
 
@@ -236,47 +237,133 @@ def abrir_busqueda_recomendada():
     boton_libros_aleatorios.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
     boton_libros_aleatorios.place(x=180, y=250)
 
+def abrir_ventana_principal():
+    # ventana bienvenida
+    ventana_bienvenida = Toplevel()
+    ventana_bienvenida.title("Code Reads")
+    ventana_bienvenida.geometry("395x510")
+    ventana_bienvenida.resizable(0, 0)
+    ventana_bienvenida.config(bg="deep sky blue")
 
-# ventana bienvenida
-ventana_bienvenida = Tk()
-ventana_bienvenida.title("Fundamentals of Code")
-ventana_bienvenida.geometry("395x510")
-ventana_bienvenida.resizable(0, 0)
-ventana_bienvenida.config(bg="deep sky blue")
+    # frame titulo
+    frame_titulo_principal = Frame(ventana_bienvenida)
+    frame_titulo_principal.config(bg="aquamarine2", width=375, height=60)
+    frame_titulo_principal.place(x=10, y=10)
 
-# frame titulo
-frame_titulo_principal = Frame(ventana_bienvenida)
-frame_titulo_principal.config(bg="aquamarine2", width=375, height=60)
-frame_titulo_principal.place(x=10, y=10)
+    lb_titulo = Label(frame_titulo_principal, text=" C O D E  R E A D S ")
+    lb_titulo.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
+    lb_titulo.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-lb_titulo = Label(frame_titulo_principal, text="F u n d a m e n t a l s   o f    C o d e")
-lb_titulo.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
-lb_titulo.place(relx=0.5, rely=0.5, anchor=CENTER)
+    # texto de bienvenida
+    frame_texto1 = Frame(ventana_bienvenida)
+    frame_texto1.config(bg="aquamarine2", width=375, height=210)
+    frame_texto1.place(x=10, y=80)
 
-# texto de bienvenida
-frame_texto1 = Frame(ventana_bienvenida)
-frame_texto1.config(bg="aquamarine2", width=375, height=210)
-frame_texto1.place(x=10, y=80)
+    # Crear el Label de bienvenida
+    lb_bienvenida = Label(frame_texto1, text="¡Bienvenido a nuestra aplicación de recomendación de \n"
+                        "libros de programación!\n\n"
+                                                    "¿Estás buscando libros de programación específicos o prefieres que te recomendemos algunos basados en tus intereses?"
+                                                    "¡Explora nuestra biblioteca y elige entre una búsqueda personalizada o nuestras recomendaciones!",
+                            bg="aquamarine2", fg="black", font=("Arial", 11), wraplength=400)
 
-# Crear el Label de bienvenida
-lb_bienvenida = Label(frame_texto1, text="¡Bienvenido a nuestra aplicación de recomendación de \n"
-                      "libros de programación!\n\n"
-                                                "¿Estás buscando libros de programación específicos o prefieres que te recomendemos algunos basados en tus intereses?"
-                                                "¡Explora nuestra biblioteca y elige entre una búsqueda personalizada o nuestras recomendaciones!",
-                        bg="aquamarine2", fg="black", font=("Arial", 11), wraplength=400)
+    # Ubicar el Label en la ventana o frame correspondiente
+    lb_bienvenida.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-# Ubicar el Label en la ventana o frame correspondiente
-lb_bienvenida.place(relx=0.5, rely=0.5, anchor=CENTER)
+    # Botón para busqueda personalizada
+    boton_ventana_personalizada = Button(ventana_bienvenida, text="Busqueda Personalizada", command=abrir_busqueda_personalizada)
+    boton_ventana_personalizada.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
+    boton_ventana_personalizada.place(x=70, y= 320)
 
-# Botón para busqueda personalizada
-boton_ventana_personalizada = Button(ventana_bienvenida, text="Busqueda Personalizada", command=abrir_busqueda_personalizada)
-boton_ventana_personalizada.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
-boton_ventana_personalizada.place(x=70, y= 320)
+    # Botón para busqueda recomendada
+    boton_ventana_recomendada = Button(ventana_bienvenida, text="Busqueda Recomendada", command=abrir_busqueda_recomendada)
+    boton_ventana_recomendada.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
+    boton_ventana_recomendada.place(x=70, y= 390)
 
-# Botón para busqueda recomendada
-boton_ventana_recomendada = Button(ventana_bienvenida, text="Busqueda Recomendada", command=abrir_busqueda_recomendada)
-boton_ventana_recomendada.config(bg="aquamarine2", fg="black", font=("MS Serif", 19))
-boton_ventana_recomendada.place(x=70, y= 390)
+# Función para crear una nueva cuenta
+def crear_cuenta():
+    usuario = entry_usuario.get()
+    contraseña = entry_contraseña.get()
+    
+    # Guardar usuario y contraseña en el diccionario
+    cuentas[usuario] = contraseña
+    
+    # Guardar el diccionario en un archivo
+    with open("cuentas.pickle", "wb") as archivo:
+        pickle.dump(cuentas, archivo)
+    
+    # Limpiar los campos de entrada
+    entry_usuario.delete(0, END)
+    entry_contraseña.delete(0, END)
+    
+    # Mostrar mensaje de éxito
+    label_mensaje.config(text="Cuenta creada con éxito")
 
+# Función para cambiar la contraseña
+def cambiar_contraseña(usuario, contraseña_actual):
+    nueva_contraseña = simpledialog.askstring("Cambiar contraseña", "Ingresa la nueva contraseña:")
+    if nueva_contraseña:
+        cuentas[usuario] = nueva_contraseña
+        with open("cuentas.pickle", "wb") as archivo:
+            pickle.dump(cuentas, archivo)
+        label_mensaje.config(text="Contraseña cambiada con éxito")
+
+# Función para iniciar sesión
+def iniciar_sesion():
+    usuario = entry_usuario.get()
+    contraseña = entry_contraseña.get()
+    
+   # Verificar si el usuario y contraseña coinciden
+    if usuario in cuentas and cuentas[usuario] == contraseña:
+        label_mensaje.config(text="Inicio de sesión exitoso")
+        abrir_ventana_principal()
+    else:
+        respuesta = messagebox.askyesno("Contraseña incorrecta", "¿Deseas cambiar la contraseña?")
+        if respuesta:
+            cambiar_contraseña(usuario, contraseña)
+        else:
+            label_mensaje.config(text="Usuario o contraseña incorrectos")
+
+# Cargar el diccionario de cuentas desde el archivo
+try:
+    with open("cuentas.pickle", "rb") as archivo:
+        cuentas = pickle.load(archivo)
+except FileNotFoundError:
+    cuentas = {}
+
+# Crear la ventana principal
+ventana = Tk()
+ventana.title("Gestor de Cuentas")
+ventana.geometry("300x200")
+ventana.resizable(0, 0)
+ventana.config(bg="deep sky blue")
+
+# Etiqueta y campo de entrada para el usuario
+label_usuario = Label(ventana, text="Usuario:")
+label_usuario.config(bg="aquamarine2")
+label_usuario.pack()
+entry_usuario = Entry(ventana)
+entry_usuario.pack()
+
+# Etiqueta y campo de entrada para la contraseña
+label_contraseña = Label(ventana, text="Contraseña:")
+label_contraseña.config(bg="aquamarine2")
+label_contraseña.pack()
+entry_contraseña = Entry(ventana, show="*")
+entry_contraseña.pack()
+
+# Botón para crear una nueva cuenta
+boton_crear = Button(ventana, text="Crear cuenta", command=crear_cuenta)
+boton_crear.config(bg="aquamarine2")
+boton_crear.pack()
+
+# Botón para iniciar sesión
+boton_iniciar_sesion = Button(ventana, text="Iniciar sesión", command=iniciar_sesion)
+boton_iniciar_sesion.config(bg="aquamarine2")
+boton_iniciar_sesion.pack()
+
+# Etiqueta para mostrar mensajes
+label_mensaje = Label(ventana, text="")
+label_mensaje.config(bg="aquamarine2")
+label_mensaje.pack()
 # correr programa
-ventana_bienvenida.mainloop()
+ventana.mainloop()
